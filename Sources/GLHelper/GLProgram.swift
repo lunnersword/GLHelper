@@ -11,10 +11,10 @@ import OpenGLES
 import GLKit
 
 public class GLProgram {
-    var program: GLuint = GLuint()
+    public var program: GLuint = GLuint()
     var attributes = [String]()
     
-    var shaders = [GLenum: GLuint]()
+    public var shaders = [GLenum: GLuint]()
     
     deinit {
         for (_, shader) in shaders {
