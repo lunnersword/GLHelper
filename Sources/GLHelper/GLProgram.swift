@@ -10,7 +10,7 @@ import Foundation
 import OpenGLES
 import GLKit
 
-class GLProgram {
+public class GLProgram {
     var program: GLuint = GLuint()
     var attributes = [String]()
     
@@ -22,7 +22,7 @@ class GLProgram {
         }
         glDeleteProgram(program)
     }
-    init() {
+    public init() {
         program = glCreateProgram()
         if program == 0 {
             print("Create Program Error!")
@@ -30,7 +30,7 @@ class GLProgram {
     }
     
     @discardableResult
-    func addShaderFromFile(type: GLenum, file: String) -> Bool {
+    public func addShaderFromFile(type: GLenum, file: String) -> Bool {
         if let source = GLProgram.shaderSourceFromFile(path: file), !source.isEmpty {
             return self.addShaderFromSource(type: type, source: source)
         } else {
@@ -42,7 +42,7 @@ class GLProgram {
     }
     
     @discardableResult
-    func addShaderFromSource(type: GLenum, source: String) -> Bool {
+    public func addShaderFromSource(type: GLenum, source: String) -> Bool {
         guard type != GL_NONE else {
             return false
         }
@@ -80,27 +80,27 @@ class GLProgram {
     }
     
     @discardableResult
-    func link() -> Bool {
+    public func link() -> Bool {
         return GLProgram.link(program: program)
     }
     
-    func use() {
+    public func use() {
         glUseProgram(program)
     }
     
-    func validate() {
+    public func validate() {
         glValidateProgram(program)
         GLProgram.checkProgramStatus(program: program)
     }
     
-    func getUniformLocation(name: String) -> GLint {
+    public func getUniformLocation(name: String) -> GLint {
         let cString = name.cString(using: String.Encoding.utf8)
         let stringPointer = UnsafePointer<GLchar>(cString)
         let location = glGetUniformLocation(program, stringPointer)
         return location
     }
     
-    func addAttribute(attribute: String) {
+    public func addAttribute(attribute: String) {
         if attributes.contains(attribute) {
             return
         }
@@ -113,7 +113,7 @@ class GLProgram {
     }
 
     
-    func getAttributeLocation(name: String) -> GLint {
+    public func getAttributeLocation(name: String) -> GLint {
         let cString = name.cString(using: String.Encoding.utf8)
         let stringPointer = UnsafePointer<GLchar>(cString)
         let location = glGetAttribLocation(program, stringPointer)
@@ -122,9 +122,9 @@ class GLProgram {
     
 }
 
-extension GLProgram {
+public extension GLProgram {
     // Because validating a program checks it against the entire OpenGL ES context state, it is an expensive operation. Since the results of program validation are only meaningful during development, you should not call this function in Release builds of your app.
-    class func checkProgramStatus(program: GLuint) {
+    public class func checkProgramStatus(program: GLuint) {
         #if DEBUG
         var logLen = GLint()
         // Check the status of the compile/link
@@ -137,7 +137,7 @@ extension GLProgram {
         }
         #endif
     }
-    class func checkShaderStatus(shader: GLuint) {
+    public class func checkShaderStatus(shader: GLuint) {
         #if DEBUG
         var logLen = GLint()
         // Check the status of the compile/link
@@ -152,7 +152,7 @@ extension GLProgram {
     }
     
     
-    class func validateProgram(program: GLuint, success: inout Bool) {
+    public class func validateProgram(program: GLuint, success: inout Bool) {
         #if DEBUG
         glValidateProgram(program)
         var result = GLint()
@@ -165,13 +165,13 @@ extension GLProgram {
         #endif
     }
     
-    class func shaderSourceFromFile(path: String) -> String? {
+    public class func shaderSourceFromFile(path: String) -> String? {
         let source = try? String(contentsOfFile: path)
         return source
     }
     
     @discardableResult
-    class func addShaderFromFile(program: GLuint, vertexFile: String, fragmentFile: String) -> Bool {
+    public class func addShaderFromFile(program: GLuint, vertexFile: String, fragmentFile: String) -> Bool {
         if let vertexSource = GLProgram.shaderSourceFromFile(path: vertexFile), let fragmentSource = GLProgram.shaderSourceFromFile(path: fragmentFile) {
             return GLProgram.addShadersFromSource(program:program, vertexSource:vertexSource, fragmentSource:fragmentSource)
         } else {
@@ -204,7 +204,7 @@ extension GLProgram {
     }
     
     @discardableResult
-    class func addShadersFromSource(program: GLuint, vertexSource: String, fragmentSource: String) -> Bool {
+    public class func addShadersFromSource(program: GLuint, vertexSource: String, fragmentSource: String) -> Bool {
         guard program != 0 else {
             return false
         }
@@ -217,7 +217,7 @@ extension GLProgram {
     }
     
     @discardableResult
-    class func link(program: GLuint) -> Bool {
+    public class func link(program: GLuint) -> Bool {
         glLinkProgram(program)
         var linked = GL_FALSE
         glGetProgramiv(program, GLenum(GL_LINK_STATUS), &linked)
